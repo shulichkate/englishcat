@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.unity3d.player"
+    xmlns:tools="http://schemas.android.com/tools">
+
+	<!-- ДОБАВЬТЕ ЭТИ РАЗРЕШЕНИЯ ДЛЯ УВЕДОМЛЕНИЙ -->
+	<uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.VIBRATE" />
+
+	<application>
+		<!-- ОСНОВНАЯ АКТИВНОСТЬ UNITY -->
+		<activity android:name="com.unity3d.player.UnityPlayerActivity"
+                  android:theme="@style/UnityThemeSelector"
+                  android:launchMode="singleTask"
+                  android:exported="true">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+			<meta-data android:name="unityplayer.UnityActivity" android:value="true" />
+		</activity>
+
+		<!-- АКТИВНОСТЬ RUSTORE (ОСТАВЛЯЕМ КАК БЫЛО) -->
+		<activity android:name="ru.rustore.unitysdk.RuStoreUnityPayActivity"
+                  android:theme="@style/UnityThemeSelector"
+                  android:launchMode="singleTop"
+                  android:exported="true">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+				<data android:scheme="@string/rustore_PayClientSettings_deeplinkScheme" />
+			</intent-filter>
+		</activity>
+
+		<!-- ДОБАВЬТЕ СЕРВИС ДЛЯ УВЕДОМЛЕНИЙ -->
+		<service android:name="com.unity.androidnotifications.NotificationCallback"
+                 android:exported="false" />
+
+		<meta-data android:name="console_app_id_value" android:value="@string/rustore_PayClientSettings_consoleApplicationId" />
+		<meta-data android:name="internal_config_key" android:value="@string/rustore_PayClientSettings_internalConfigKey" />
+		<meta-data android:name="sdk_pay_scheme_value" android:value="@string/rustore_PayClientSettings_deeplinkScheme" />
+
+		<!-- УБЕРИТЕ СТРОКУ С ИКОНКОЙ ИЛИ ЗАМЕНИТЕ НА СУЩЕСТВУЮЩУЮ -->
+		<!-- Если нужно, используйте стандартную иконку Unity -->
+		<!-- <meta-data android:name="com.google.firebase.messaging.default_notification_icon" 
+                   android:resource="@drawable/app_icon_small" /> -->
+	</application>
+</manifest>
