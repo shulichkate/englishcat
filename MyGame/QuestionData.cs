@@ -10,6 +10,7 @@ public class QuestionData
     public int correctAnswerIndex;
     public int wordIndex; // Индекс слова в модуле
     public int module; // Номер модуля
+    public Sprite cachedSprite; // Кэшированный спрайт
 
     public QuestionData(int index, int moduleNum)
     {
@@ -102,5 +103,36 @@ public class QuestionData
         {
             correctAnswerIndex = 0;
         }
+    }
+
+    // Метод для загрузки спрайта (с кэшированием)
+    public Sprite LoadSprite()
+    {
+        if (cachedSprite != null)
+            return cachedSprite;
+
+        if (string.IsNullOrEmpty(imageName))
+            return null;
+
+        // Пробуем разные пути загрузки
+        string[] paths = {
+            "kart/" + imageName,
+            "Images/" + imageName,
+            "Sprites/" + imageName,
+            imageName
+        };
+
+        foreach (string path in paths)
+        {
+            cachedSprite = Resources.Load<Sprite>(path);
+            if (cachedSprite != null)
+            {
+                Debug.Log($" Загружена картинка: {path}");
+                return cachedSprite;
+            }
+        }
+
+        Debug.LogWarning($" Не найдена картинка: {imageName}");
+        return null;
     }
 }

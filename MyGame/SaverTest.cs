@@ -11,6 +11,11 @@ public class SaverTest : MonoBehaviour
     private BadgeSystem badgeSystem;
     private QuestionSystem questionSystem;
 
+    [Header("Аудио для вопросов")]
+    public AudioSource questionAudioSource; // Отдельный AudioSource для озвучки вопросов
+    public string audioFolderPath = "audio/"; // Папка с аудиофайлами
+    public bool autoPlayQuestionAudio = true; // Автоматически воспроизводить при открытии вопроса
+
     [Header("UI для изученных слов")]
     public GameObject learnedWordsPanel; // Панель с изученными словами
     public Transform learnedWordsGrid; // Grid для отображения изученных слов
@@ -189,6 +194,63 @@ public class SaverTest : MonoBehaviour
         // Обновляем состояние кнопки
         UpdateExchangeButton();
     }
+
+
+
+
+    // Новый метод для воспроизведения аудио вопроса
+    public void PlayQuestionAudio(string imageName)
+    {
+        if (questionAudioSource == null)
+        {
+            Debug.LogWarning(" questionAudioSource не назначен!");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(imageName))
+        {
+            Debug.LogWarning(" Имя аудиофайла пустое");
+            return;
+        }
+
+        // Пробуем разные пути загрузки
+        string[] paths = {
+        audioFolderPath + imageName,
+        "Audio/" + imageName,
+        "Sounds/" + imageName,
+        imageName
+    };
+
+        AudioClip clip = null;
+
+        foreach (string path in paths)
+        {
+            clip = Resources.Load<AudioClip>(path);
+            if (clip != null)
+            {
+                Debug.Log($" Загружено аудио: {path}");
+                break;
+            }
+        }
+
+        if (clip != null)
+        {
+            questionAudioSource.clip = clip;
+            questionAudioSource.Play();
+            Debug.Log($" Воспроизводится аудио для картинки: {imageName}");
+        }
+        else
+        {
+            Debug.LogWarning($" Не найдено аудио: {imageName}");
+        }
+    }
+
+
+
+
+
+
+
 
     // Показать панель изученных слов
     public void ShowLearnedWords()
@@ -388,7 +450,7 @@ public class SaverTest : MonoBehaviour
 
         UpdateMainScreen();
     }
-
+    // Обновите метод UpdateMainScreen, добавив вызов UpdateCoinsInShops()
     public void UpdateMainScreen()
     {
         if (levelText != null) levelText.text = currentLevel.ToString();
@@ -402,6 +464,8 @@ public class SaverTest : MonoBehaviour
         }
 
         UpdateExchangeButton();
+
+        
     }
 
     public void ExchangeCoinsToLives()
@@ -718,12 +782,13 @@ public class SaverTest : MonoBehaviour
 
     void OnQuestionCellClicked(int questionListIndex)
     {
-      /*  if (lives <= 0 && (lifeTimer == null || !lifeTimer.IsUnlimitedLivesActive))
+        /* if (lives <= 0 && (lifeTimer == null || !lifeTimer.IsUnlimitedLivesActive))
         {
             ShowNoLivesPopup();
             return;
         }
-      */
+        */
+
         currentCellIndex = -1;
         currentQuestionIndex = -1;
 
@@ -758,6 +823,12 @@ public class SaverTest : MonoBehaviour
 
                     if (questionSystem != null)
                         questionSystem.LoadQuestion(questionData, questionText, questionImage, answerButtons, answerTexts, this);
+
+                    // НОВОЕ: Воспроизводим аудио для вопроса
+                    if (autoPlayQuestionAudio && questionData != null)
+                    {
+                        PlayQuestionAudio(questionData.imageName);
+                    }
                 }
             }
             catch (System.Exception e)
@@ -769,6 +840,9 @@ public class SaverTest : MonoBehaviour
         }
     }
 
+
+
+  
     // === ВСПОМОГАТЕЛЬНЫЕ МЕТОДЫ ===
 
     public void PlayCorrectAnswerAnimation()

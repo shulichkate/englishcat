@@ -4,7 +4,7 @@ using TMPro;
 
 public class QuestionSystem : MonoBehaviour
 {
-    // ИСПРАВЛЕНО: Теперь принимает QuestionData
+    // ИСПРАВЛЕНО: Теперь принимает QuestionData с улучшенной загрузкой
     public void LoadQuestion(QuestionData question, TextMeshProUGUI questionText,
                             Image questionImage, Button[] answerButtons, TextMeshProUGUI[] answerTexts,
                             SaverTest saver)
@@ -13,13 +13,27 @@ public class QuestionSystem : MonoBehaviour
 
         questionText.text = !string.IsNullOrEmpty(question.text) ? question.text : "Вопрос не загружен";
 
+        // Загружаем картинку
         if (!string.IsNullOrEmpty(question.imageName))
         {
-            Sprite sprite = Resources.Load<Sprite>("kart/" + question.imageName);
+            Sprite sprite = question.LoadSprite();
             if (sprite != null)
             {
                 questionImage.sprite = sprite;
+                questionImage.preserveAspect = true; // Сохраняем пропорции
+                questionImage.gameObject.SetActive(true);
+                Debug.Log($" Картинка установлена для вопроса: {question.text}");
             }
+            else
+            {
+                // Если картинки нет, показываем заглушку или скрываем
+                questionImage.gameObject.SetActive(false);
+                Debug.LogWarning($" Картинка не загружена для вопроса: {question.text}");
+            }
+        }
+        else
+        {
+            questionImage.gameObject.SetActive(false);
         }
 
         for (int i = 0; i < answerButtons.Length && i < question.answers.Length; i++)
