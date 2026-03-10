@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3e591d99a91dca4ba692a69b0d0dd43, type: 3}
   m_Name: PayClientSettings
   m_EditorClassIdentifier: 
-  consoleApplicationId: 2063687443
-  deeplinkScheme: ru.mentormind.films
+  consoleApplicationId: 
+  deeplinkScheme: mentor.englishcat

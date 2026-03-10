@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="rustore_PayClientSettings_consoleApplicationId" translatable="false">2063687443</string>
+    <string name="rustore_PayClientSettings_consoleApplicationId" translatable="false"></string>
     <string name="rustore_PayClientSettings_internalConfigKey" translatable="false">unity</string>
-    <string name="rustore_PayClientSettings_deeplinkScheme" translatable="false">ru.mentormind.films</string>
+    <string name="rustore_PayClientSettings_deeplinkScheme" translatable="false">mentor.englishcat</string>
 
 </resources>
